@@ -4,13 +4,18 @@ RUN apt upgrade -y
 # install dependencies
 RUN apt install -y ruby ruby-bundler ruby-dev git
 RUN gem install vanagon
+# install java
+RUN apt-get install -y wget apt-transport-https gnupg
+RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
+RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+RUN apt update
+RUN apt install temurin-17-jdk -y
 # move over the executables
-ADD https://github.com/puppetlabs/security-snyk-vanagon-action/releases/latest/download/vanagon_action /usr/local/bin/vanagon_action
+ADD https://github.com/puppetlabs/security-mend-vanagon-action/releases/latest/download/vanagon_action /usr/local/bin/vanagon_action
 # ADD vanagon_action /usr/local/bin/vanagon_action
 RUN chmod +x /usr/local/bin/vanagon_action
-# install snyk
-ADD https://github.com/snyk/cli/releases/download/v1.908.0/snyk-linux /usr/local/bin/snyk 
-RUN chmod 751 /usr/local/bin/snyk
+# download mend unified agent
+RUN wget -O /root/wss-unified-agent.jar https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
 # startup script and startup
 ADD docker_confs/start_script.sh /usr/local/bin/start_script.sh
 RUN chmod +x /usr/local/bin/start_script.sh

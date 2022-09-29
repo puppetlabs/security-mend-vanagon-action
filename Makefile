@@ -1,11 +1,11 @@
-LOCAL_DIR = /Users/oak.latt/dev
+LOCAL_DIR = /Users/jeremy.mill/Documents
 
 containerName = sec-van-action
-# testFolder = /Users/jeremy.mill/Documents/bolt-vanagon/
+testFolder = /Users/jeremy.mill/Documents/bolt-vanagon/
 # testFolder = /Users/jeremy.mill/Documents/puppet-runtime/
 # testFolder = /Users/jeremy.mill/Documents/pe-installer-vanagon/
 # testFolder = /Users/jeremy.mill/Documents/pxp-agent-vanagon/
-testFolder = /Users/jeremy.mill/Documents/pe-opsworks-tools-vanagon/
+# testFolder = /Users/jeremy.mill/Documents/pe-opsworks-tools-vanagon/
 
 SSHKEY := $(shell cat /Users/jeremy.mill/.ssh/id_ed25519 | base64)
 
@@ -28,15 +28,17 @@ itest:
 	make copy_testfiles
 
 	docker run -i --name $(containerName) \
-		-e INPUT_SNYKORG=sectest \
-		-e INPUT_SNYKTOKEN=$(SNYK_TOKEN) \
+		-e INPUT_MENDAPIKEY=$(MEND_API_KEY) \
+		-e INPUT_MENDTOKEN=$(MEND_BOT_TOKEN) \
+		-e INPUT_MENDURL=$(MEND_URL) \
+		-e INPUT_PRODUCTNAME=SecurityTest \
+		-e INPUT_PROJECTNAME=bolt-vanagon \
 		-e GITHUB_WORKSPACE=/github/workspace \
-		-e GITHUB_REPOSITORY=olatt/snyk-test \
 		-e INPUT_SSHKEY="$(SSHKEY)" \
 		-e INPUT_SSHKEYNAME=id_ed25519 \
 		-e INPUT_SVDEBUG=true \
 		-e INPUT_BRANCH=test \
-		-v "$(LOCAL_DIR)/security-snyk-vanagon-action/testfiles/repo":"/github/workspace" \
+		-v "$(LOCAL_DIR)/security-mend-vanagon-action/testfiles/repo":"/github/workspace" \
 		-t $(containerName) 
 
 exec:
@@ -44,8 +46,11 @@ exec:
 	make build
 	make copy_testfiles
 	docker run --platform linux/amd64 --name $(containerName) \
-		-e INPUT_SNYKORG=sectest \
-		-e INPUT_SNYKTOKEN=$(SNYK_TOKEN) \
+		-e INPUT_MENDAPIKEY=$(MEND_API_KEY) \
+		-e INPUT_MENDTOKEN=$(MEND_BOT_TOKEN) \
+		-e INPUT_MENDURL=$(MEND_URL) \
+		-e INPUT_MENDPRODUCTNAME=SecurityTest \
+		-e INPUT_MENDPROJECTNAME=bolt-vanagon \
 		-e GITHUB_WORKSPACE=/github/workspace \
 		-e INPUT_SKIPPROJECTS=agent-runtime-1.10.x,agent-runtime-5.5.x,bolt-runtime,client-tools-runtime-2019.8.x,client-tools-runtime-irving,client-tools-runtime-main,pdk-runtime,pe-bolt-server-runtime-2019.8.x,pe-bolt-server-runtime-main,pe-installer-runtime-2019.8.x,pe-installer-runtime-main,agent-runtime-main \
 		-e INPUT_SKIPPLATFORMS=cisco-wrlinux-5-x86_64,cisco-wrlinux-7-x86_64,debian-10-armhf,eos-4-i386,fedora-30-x86_64,fedora-31-x86_64,osx-10.14-x86_64 \
@@ -53,13 +58,8 @@ exec:
 		-e INPUT_SSHKEYNAME=id_ed25519 \
 		-e INPUT_SVDEBUG=true \
 		-e INPUT_BRANCH=main \
-		-v "$(LOCAL_DIR)/security-snyk-vanagon-action/testfiles/repo":"/github/workspace" \
+		-v "$(LOCAL_DIR)/security-mend-vanagon-action/testfiles/repo":"/github/workspace" \
 		-it $(containerName) /bin/bash
 
 test:
 	echo $(SSHKEY)
-
-start_cache:
-	-docker rm cache_proxy
-	docker build -t cache_proxy -f ./dev_tools/Dockerfile .
-	docker run -it --rm --name cache_proxy -e INPUT_RPROXYUSER=artifactory -e INPUT_RPROXYKEY="$(RPROXY_KEY)" -p8080:80 cache_proxy

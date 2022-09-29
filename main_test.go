@@ -16,29 +16,29 @@ func contains(s []string, str string) bool {
 }
 
 func TestGetEnvVar(t *testing.T) {
-	os.Setenv("INPUT_SNYKTOKEN", "foo")
-	defer os.Unsetenv("INPUT_SNYKTOKEN")
+	os.Setenv("INPUT_MENDAPIKEY", "apikey")
+	defer os.Unsetenv("INPUT_MENDAPIKEY")
 
-	os.Setenv("INPUT_SNYKORG", "org")
-	defer os.Unsetenv("INPUT_SNYKORG")
+	os.Setenv("INPUT_MENDTOKEN", "token")
+	defer os.Unsetenv("INPUT_MENDTOKEN")
+
+	os.Setenv("INPUT_MENDURL", "url")
+	defer os.Unsetenv("INPUT_MENDURL")
+
+	os.Setenv("INPUT_PRODUCTNAME", "pname")
+	defer os.Unsetenv("INPUT_PRODUCTNAME")
+
+	os.Setenv("INPUT_PROJECTNAME", "proj")
+	defer os.Unsetenv("INPUT_PROJECTNAME")
 
 	os.Setenv("GITHUB_WORKSPACE", "/var/foo")
 	defer os.Unsetenv("GITHUB_WORKSPACE")
-
-	os.Setenv("INPUT_NOMONITOR", "true")
-	defer os.Unsetenv("INPUT_NOMONITOR")
 
 	os.Setenv("INPUT_SKIPPLATFORMS", "foo,bar,baz")
 	defer os.Unsetenv("INPUT_SKIPPLATFORMS")
 
 	os.Setenv("INPUT_SKIPPROJECTS", "abc,def,hij")
 	defer os.Unsetenv("INPUT_SKIPPROJECTS")
-
-	os.Setenv("INPUT_URLSTOREPLACE", "artifactory.delivery.puppetlabs.net,%s/xart,builds.delivery.puppetlabs.net,%s/xbuild")
-	defer os.Unsetenv("INPUT_URLSTOREPLACE")
-
-	os.Setenv("INPUT_NEWHOST", "localhost")
-	defer os.Unsetenv("INPUT_NEWHOST")
 
 	os.Setenv("INPUT_SVDEBUG", "true")
 	defer os.Unsetenv("INPUT_SVDEBUG")
@@ -50,17 +50,23 @@ func TestGetEnvVar(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error running getEnvVar: %s", err)
 	}
-	if conf.SnykToken != "foo" {
-		t.Errorf("Snyk token value wrong. Got: %s", conf.SnykToken)
+	if conf.MendApiKey != "apikey" {
+		t.Errorf("mend api key value wrong. Got: %s", conf.MendApiKey)
 	}
-	if conf.SnykOrg != "org" {
-		t.Errorf("Snyk org value wrong. Got: %s", conf.SnykOrg)
+	if conf.MendUserKey != "token" {
+		t.Errorf("mend user key value wrong. Got: %s", conf.MendUserKey)
+	}
+	if conf.MendURL != "url" {
+		t.Errorf("mend url wrong. Got: %s", conf.MendURL)
+	}
+	if conf.ProductName != "pname" {
+		t.Errorf("mend product name wrong. Got: %s", conf.ProductName)
+	}
+	if conf.ProjectName != "proj" {
+		t.Errorf("mend project name wrong. Got: %s", conf.MendURL)
 	}
 	if conf.GithubWorkspace != "/var/foo" {
 		t.Errorf("workspace value wrong. Got: %s", conf.GithubWorkspace)
-	}
-	if !conf.NoMonitor {
-		t.Errorf("NoMonitor should have been true")
 	}
 	plat_tvals := []string{"foo", "bar", "baz"}
 	for _, v := range plat_tvals {
