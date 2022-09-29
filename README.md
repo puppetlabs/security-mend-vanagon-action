@@ -1,4 +1,4 @@
-# security-snyk-vanagon-action
+# security-mend-vanagon-action
 
 This action runs snyk on generated gemfiles for vanagon builds.
 
