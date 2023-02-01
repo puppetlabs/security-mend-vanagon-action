@@ -14,21 +14,24 @@ jobs:
       uses: twingate/github-action@v1
       with:
         service-key: ${{ secrets.TWINGATE_KEY }}
+    - name: setup java
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 17
     - name: checkout the current PR
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
         persist-credentials: false
-    - name: Run Vanagon Snyk Scan
+    - name: Run Vanagon Mend Scan
       uses: puppetlabs/security-snyk-vanagon-action@v3
       with:
-        snykToken: ${{ secrets.SNYK_TOKEN }}
-        snykOrg: 'puppet-enterprise'
+        WS_APIKEY: ${{ secrets.MEND_API_KEY }}
+        WS_USERKEY: ${{ secrets.MEND_TOKEN }}
+        WS_PRODUCTNAME: 'Puppet Enterprise'
+        WS_PROJECTNAME: ${{ github.event.repository.name }}
         skipProjects: 'agent-runtime-5.5.x,agent-runtime-1.10.x,client-tools-runtime-irving,pdk-runtime'
         skipPlatforms: 'cisco-wrlinux-5-x86_64,cisco-wrlinux-7-x86_64,debian-10-armhf,eos-4-i386,fedora-30-x86_64,fedora-31-x86_64,osx-10.14-x86_64'
         sshKey: '${{ secrets.SSH_KEY }}'
         sshKeyName: 'id_ed25519'
-        branch : '${{ github.ref_name }}'
-    - name: Check output
-      if: steps.scan.outputs.vulns != ''
-      run: echo "Vulnerabilities detected; ${{ steps.scan.outputs.vulns }}" && exit 1
