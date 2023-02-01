@@ -259,8 +259,16 @@ func setDebugEnvVars() {
 	}
 	_ = out
 	// MAX_V_DEPS = 1
-	os.Setenv("INPUT_SNYKORG", "snyk-code-test-n8h")
-	os.Setenv("INPUT_SNYKTOKEN", os.Getenv("SNYK_TOKEN"))
+	//INPUT_MENDAPIKEY=$(MEND_API_KEY)
+	//INPUT_MENDTOKEN=$(MEND_BOT_TOKEN)
+	//INPUT_MENDURL=$(MEND_URL)
+	//INPUT_PRODUCTNAME=SecurityTest
+	//INPUT_PROJECTNAME=bolt-vanagon
+	os.Setenv("INPUT_MENDAPIKEY", os.Getenv("MEND_API_KEY"))
+	os.Setenv("INPUT_MENDTOKEN", os.Getenv("MEND_BOT_TOKEN"))
+	os.Setenv("INPUT_MENDURL", os.Getenv("MEND_URL"))
+	os.Setenv("INPUT_PRODUCTNAME", os.Getenv("MEND_PRODUCTNAME"))
+	os.Setenv("INPUT_PROJECTNAME", os.Getenv("MEND_PROJECTNAME"))
 	os.Setenv("GITHUB_WORKSPACE", "./testfiles/repo")
 
 	os.Setenv("INPUT_SVDEBUG", "true")
