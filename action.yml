@@ -1,17 +1,23 @@
-name: 'vanagon_snyk_scan_action'
+name: 'vanagon_mend_scan_action'
 description: 'Scans vanagon builds for ruby dependencies and untrusted repos'
 inputs:
-  snykToken:
-    description: 'snyk access token'
+  mendApiKey:
+    description: 'mend API key'
     required: true
-  snykOrg:
-    description: 'snyk org to write results to'
+  mendToken:
+    description: 'mend user token'
+    required: true
+  mendURL:
+    description: 'mend URL for your mend endpoint'
+    required: true
+  productName:
+    description: 'name of the product to send results to'
+    required: true
+  projectName:
+    description: 'name of the project. Note that the branch, project, and platform will be appended'
     required: true
   branch:
     description: 'branch name to prepend to the snyk project name'
-    required: false
-  noMonitor:
-    description: 'allows skipping the snyk monitor step'
     required: false
   skipProjects:
     description: 'A comma separated list of projects to skip'
@@ -28,11 +34,6 @@ inputs:
   svDebug:
     description: 'turn on debug logging'
     required: false
-outputs:
-  vulns: # id of output
-    description: 'Array of vulnerable packages'
-  # licenses: # id of output
-  #   description: 'Array of license issues'
 runs:
   using: 'docker'
   image: 'Dockerfile'
