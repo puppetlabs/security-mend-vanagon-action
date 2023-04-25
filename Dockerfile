@@ -3,7 +3,7 @@ RUN apt update
 RUN apt upgrade -y
 # install dependencies
 RUN apt install -y ruby ruby-bundler ruby-dev git
-RUN gem install vanagon
+RUN gem install vanagon --source 'https://artifactory.delivery.puppetlabs.net/artifactory/api/gems/rubygems/'
 # install java
 RUN apt-get install -y wget apt-transport-https gnupg
 RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
