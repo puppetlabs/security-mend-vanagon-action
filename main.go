@@ -144,7 +144,12 @@ func buildGemFile(project, platform string, gems *[]gem) (string, error) {
 		log.Println("couldn't change to gemfile path", err)
 		return "", err
 	}
-	err = exec.Command("bundle", "lock").Run()
+	err = exec.Command("bundle", "config", "set", "--local", "path", "vendor/bundle").Run()
+	if err != nil {
+		log.Println("Error setting bundle config path", err)
+		return "", err
+	}
+	err = exec.Command("bundle", "install").Run()
 	if err != nil {
 		log.Println("Error generating lockfile from gemfile", err)
 		return "", err
