@@ -1,6 +1,7 @@
 FROM ubuntu:focal
 RUN apt update
 RUN apt upgrade -y
+RUN apt-get install -y build-essential
 # install dependencies
 RUN apt install -y ruby ruby-bundler ruby-dev git
 RUN gem install vanagon
