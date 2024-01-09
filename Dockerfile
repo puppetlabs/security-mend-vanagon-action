@@ -2,7 +2,8 @@ FROM ubuntu:focal
 RUN apt update
 RUN apt upgrade -y
 # install dependencies
-RUN apt install -y ruby ruby-bundler ruby-dev git libyaml-dev
+RUN apt install -y ruby ruby-bundler ruby-dev git
+RUN apt-get install libyaml-dev
 RUN gem install vanagon
 # install java
 RUN apt-get install -y wget apt-transport-https gnupg
