@@ -10,7 +10,7 @@ jobs:
       with:
         go-version: ^1.16.1
     - name: Install Ruby/Bundler
-      uses: actions/setup-ruby@v1
+      uses: "ruby/setup-ruby@v1"
       with:
         ruby-version: '2.7'
     - name: Checkout code
